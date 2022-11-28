@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<head>
+    <title>Generator Cod Numeric Personal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="js/libs/jquery-ui/jquery-ui.min.css" />
+    <script type="text/javascript" src="js/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery-ui/datepicker-ro.js"></script>
+    <style type="text/css">
+        .padded {
+            padding: 0.5em;
+        }
+    </style>
+    <script>
+        function padZero(param, toLength) {
+                for (; param.length < toLength; param = '0' + param) {
+                }
+                return param;
+            }
+
+            function generateCNP(sex, date, country, judet, cod) {
+                //sex: 1=female, 0=male        
+                //date: zz.ll.aaaa
+                //country: 1=romania, 0=abroad
+                //judet: numeric
+                //cod: numeric
+
+
+                var century = 0;
+
+                var cnp1;
+                var cnp2;
+
+                var datearray = date.split(/\./);
+                //console.log(datearray);
+
+                var year = datearray[2];
+                var month = padZero(datearray[1], 2);
+                var day = padZero(datearray[0], 2);
+
+
+                //if abroad, we use 7/8
+                if (country == 0) {
+                    century = 7;
+                } else {
+                    //if in romania and 1900 we use 1/2
+                    if (year < 2000) {
+                        century = 1;
+                    } else {
+                        century = 5;
+                    }
+                }
+                cnp1 = "" + (century + parseInt(sex));
+                cnp2 = year.substring(2, 4) + month + day;
+                cnp = "" + cnp1 + cnp2 + padZero(judet, 2) + padZero(cod, 3);
+                vcnp = "279146358279";
+                var bigTotal = 0;
+                for (i = 0; i < 12; i++) {
+                    bigTotal += parseInt(cnp[i]) * parseInt(vcnp[i]);
+                }
+
+                var checksum = bigTotal % 11;
+
+                if (checksum == 10) {
+                    checksum = 1;
+                }
+                cnp = "" + cnp + checksum;
+                return cnp;
+            }
+
+            $(function () {
+                $("#datepicker").datepicker(
+                        {
+                            changeMonth: true,
+                            changeYear: true,
+                            dateFormat: "dd.mm.yy",
+                            minDate: "-100Y",
+                            maxDate: 0,
+                            regional: ["ro"]
+                        });
+
+                $("#genButton").button().click(
+                        function (event) {
+                            event.preventDefault();
+                            $("#genCode").val(Math.floor(Math.random() * 499) + 500);
+                            $("#cnp").text(
+                                    generateCNP(
+                                            $("#sex").val(),
+                                            $("#datepicker").val(),
+                                            $("#country").val(),
+                                            $("#judet").val(),
+                                            $("#genCode").val()
+                                            )
+                                    );
+                        }
+                );
+                //$("genCode").val(generateCNP("1", "01.12.2003", "1", "44", "123"));
+            });
+    </script>
+</head>
+
+<body>
+    <div class="ui-widget">
+        <div class="ui-widget-header ui-corner-top ui-helper-clearfix padded">
+            Generator CNP | Creator: @andrxi4k pe Instagram
+        </div>
+        <div class="ui-widget-content padded">
+            <p>Sex:
+                <select id="sex">
+                    <option value="1">Feminin</option>
+                    <option value="0">Masculin</option>
+                </select>
+            </p>
+            <p>Data nașterii (zz.ll.aaaa):
+                <input type="text" id="datepicker"> (calendar sau scris manual)</p>
+            <p>Țara nașterii:
+                <select id="country">
+                    <option value="1">România</option>
+                    <option value="0">Străinătate</option>
+                </select>
+            </p>
+            <p>Județul unde se generează CNP-ul:
+                <select id="judet">
+                    <option value="1">Alba</option>
+                    <option value="2">Arad</option>
+                    <option value="3">Argeș</option>
+                    <option value="4">Bacău</option>
+                    <option value="5">Bihor</option>
+                    <option value="6">Bistrița-Năsăud</option>
+                    <option value="7">Botoșani</option>
+                    <option value="9">Brăila</option>
+                    <option value="8">Brașov</option>
+                    <option value="40">București</option>
+                    <option value="41">București S.1</option>
+                    <option value="42">București S.2</option>
+                    <option value="43">București S.3</option>
+                    <option value="44">București S.4</option>
+                    <option value="45">București S.5</option>
+                    <option value="46">București S.6</option>
+                    <option value="10">Buzău</option>
+                    <option value="51">Călărași</option>
+                    <option value="11">Caraș-Severin</option>
+                    <option value="12">Cluj</option>
+                    <option value="13">Constanța</option>
+                    <option value="14">Covasna</option>
+                    <option value="15">Dâmbovița</option>
+                    <option value="16">Dolj</option>
+                    <option value="17">Galați</option>
+                    <option value="52">Giurgiu</option>
+                    <option value="18">Gorj</option>
+                    <option value="19">Harghita</option>
+                    <option value="20">Hunedoara</option>
+                    <option value="21">Ialomița</option>
+                    <option value="22">Iași</option>
+                    <option value="23">Ilfov</option>
+                    <option value="24">Maramureș</option>
+                    <option value="25">Mehedinți</option>
+                    <option value="26">Mureș</option>
+                    <option value="27">Neamț</option>
+                    <option value="28">Olt</option>
+                    <option value="29">Prahova</option>
+                    <option value="31">Sălaj</option>
+                    <option value="30">Satu Mare</option>
+                    <option value="32">Sibiu</option>
+                    <option value="33">Suceava</option>
+                    <option value="34">Teleorman</option>
+                    <option value="35">Timiș</option>
+                    <option value="36">Tulcea</option>
+                    <option value="38">Vâlcea</option>
+                    <option value="37">Vaslui</option>
+                    <option value="39">Vrancea</option>
+                </select>
+            </p>
+            <p>
+                Cod serial (needitabil, generat aleatoriu 500-999):
+                <input type="text" id="genCode" readonly value="500" size="3" />
+            </p>
+
+            <input type="button" id="genButton" value="Generare CNP" />
+
+            <p>
+                CNP Generat: <span style="font-weight:bold;" id="cnp"></span>
+            </p>
+            <p>
+                CNP-ul generat are caracter temporar, neoficial și pot exista dubluri. Este indicat să notificați părinții copiilor fără
+                CNP să înceapă demersurile pentru obținerea unui CNP oficial.
+            </p>
+            <p>
+                Pentru persoane din străinătate: La acordarea primului permis de sedere, cetățenii străini vor primi un CNP care se acorda
+                o singură dată, indiferent de numărul de intrări sau de perioada de timp petrecută pe teritoriul României.
+            </p>
+            <p>
+                Pentru imigranții din Centrul Regional de Cazare și Proceduri pentru Solicitanții de Azil, după șase luni de ședere în centru
+                li se acordă un CNP pe baza căruia pot să se angajeze și să lucreze în afara centrului.
+            </p>
+        </div>
+    </div>
+</body>
+
+
+</html>
